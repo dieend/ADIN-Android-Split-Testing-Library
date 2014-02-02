@@ -7,6 +7,7 @@
   <modules>
   	<module>annotation</module>
   	<module>annotation.processor</module>
+  	<module>android-library</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
