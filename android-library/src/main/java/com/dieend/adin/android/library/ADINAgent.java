@@ -51,6 +51,8 @@ public class ADINAgent {
 			}
 			id = dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
 			timedEvent.put(key, id);
+		} else {
+			dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
 		}
 	}
 }
