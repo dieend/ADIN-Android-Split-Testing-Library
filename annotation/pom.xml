@@ -6,10 +6,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>annotation</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
   <name>ADIN Annotation</name>
   
   <build>
+      <finalName>${project.name}-${project.version}</finalName>
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
