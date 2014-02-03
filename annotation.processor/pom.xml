@@ -9,6 +9,7 @@
   <name>ADIN Annotation Processor</name>
   <version>0.0.2</version>
   <build>
+    <finalName>${project.name}-${project.version}</finalName>
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -50,7 +51,7 @@
       <dependency>
           <groupId>com.dieend.adin</groupId>
           <artifactId>annotation</artifactId>
-          <version>0.0.2</version>
+          <version>0.0.3-SNAPSHOT</version>
           <scope>compile</scope>
       </dependency>
       <dependency>
