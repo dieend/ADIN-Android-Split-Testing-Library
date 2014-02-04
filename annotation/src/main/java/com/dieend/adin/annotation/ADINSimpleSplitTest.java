@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention( RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
-public @interface ADINSimpleAlternateWith {
+public @interface ADINSimpleSplitTest {
 	String method();
 	String experimentName();
 }
