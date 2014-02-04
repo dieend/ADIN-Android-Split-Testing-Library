@@ -24,7 +24,7 @@ public privileged aspect SplittingAspect {
         call($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
         args(#args($method.getParameters()))
         #end{
-        if(com.dieend.adin.android.library.ADINAgent.isInExperiment("$experimentName")) {
+        if(com.dieend.adin.android.library.ADINAgent.isInExperiment("$experimentName") && com.dieend.adin.android.library.ADINAgent.isTreated()) {
                 #if($return!="void")return #end
 proceed(instance#if($method.getParameters().size() > 0),#end #args($method.getParameters()));
         } else {

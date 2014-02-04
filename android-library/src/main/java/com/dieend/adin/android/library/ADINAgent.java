@@ -50,6 +50,9 @@ public class ADINAgent {
 	public static boolean isInExperiment(String experimentName) {
 		return ADINAgent.i().selector.isInExperiment(experimentName);
 	}
+	public static boolean isTreated() {
+		return ADINAgent.i().selector.isTreated();
+	}
 	private static ADINAgent i() {
 		if (instance == null) throw new RuntimeException("ADINAgent haven't been initialized.\n"
 				+ "Please initialize it with ADINAgent.onCreate()");

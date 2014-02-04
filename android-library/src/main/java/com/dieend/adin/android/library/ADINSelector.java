@@ -23,5 +23,8 @@ final class ADINSelector implements IADINSelector {
 	public boolean isReady() {
 		return true;
 	}
-	
+	@Override
+	public boolean isTreated() {
+		return true;
+	}	
 }
