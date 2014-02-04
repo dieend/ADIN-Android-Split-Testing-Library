@@ -27,11 +27,17 @@ public class SimpleAlternateMethodGenerationProcessorTest {
 		 
 		 List<JavaFileObject> r = Compilation.compile(pc,jfo).generatedSources();
 		 
-		 try {
-			 ByteStreams.copy(r.get(0).openInputStream(), new FileOutputStream("manual_check.aj"));
-		 } catch (Exception e) {
-			 e.printStackTrace();
-			 fail();
+		 boolean gen = false;
+		 for (int i=0; i<r.size(); i++) {
+			 gen = true;
+			 JavaFileObject o = r.get(i);
+			 try {
+				 ByteStreams.copy(o.openInputStream(), new FileOutputStream("target/manual_check" + i + ".aj") );
+			 } catch (Exception e) {
+				 e.printStackTrace();
+				 fail();
+			 }
 		 }
+		 if (!gen) fail();
 	  }
 }
