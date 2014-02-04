@@ -3,11 +3,10 @@
   <parent>
     <groupId>com.dieend.adin</groupId>
     <artifactId>ADIN-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
   </parent>
   <artifactId>annotation.processor</artifactId>
   <name>ADIN Annotation Processor</name>
-  <version>0.0.2</version>
   <build>
     <finalName>${project.name}-${project.version}</finalName>
       <plugins>
@@ -51,7 +50,7 @@
       <dependency>
           <groupId>com.dieend.adin</groupId>
           <artifactId>annotation</artifactId>
-          <version>0.0.3-SNAPSHOT</version>
+          <version>${project.version}</version>
           <scope>compile</scope>
       </dependency>
       <dependency>

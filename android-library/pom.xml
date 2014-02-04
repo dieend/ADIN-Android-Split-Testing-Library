@@ -28,7 +28,7 @@
 		<dependency>
           <groupId>com.dieend.adin</groupId>
           <artifactId>annotation</artifactId>
-          <version>0.0.2</version>
+          <version>${project.version}</version>
           <scope>compile</scope>
       </dependency>
 		<dependency>
