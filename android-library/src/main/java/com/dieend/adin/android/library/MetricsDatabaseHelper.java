@@ -9,7 +9,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MetricsDatabaseHelper extends SQLiteOpenHelper{
+class MetricsDatabaseHelper extends SQLiteOpenHelper{
 	 // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;

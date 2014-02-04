@@ -46,11 +46,13 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
 	        List<ExecutableElement> concernMethods = new ArrayList<ExecutableElement>();
 	        List<String> alternateMethods = new ArrayList<String>();
 	        List<String> returnTypes = new ArrayList<String>();
+	        List<String> experimentNames = new ArrayList<String>();
 	        boolean any = false;
 	        
 	        for (Element element : roundEnv.getElementsAnnotatedWith(ADINSimpleAlternateWith.class)) {
 	        	any = true;
 		        ADINSimpleAlternateWith annotation = element.getAnnotation(ADINSimpleAlternateWith.class);
+		        experimentNames.add(annotation.experimentName());
 		        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
 		        concernMethods.add((ExecutableElement) element);
 		        alternateMethods.add(annotation.method());
@@ -61,6 +63,7 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
 	        vc.put("methods", concernMethods );
 	        vc.put("alternateMethods", alternateMethods);
 	        vc.put("returnTypes", returnTypes);
+	        vc.put("experimentNames", experimentNames);
 	        
 	        FileObject jfo = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "com.dieend.adin.generated.aspect", "SplittingAspect.java" , concernClasses.toArray(new Element[0]));
 	        Writer writer = jfo.openWriter();

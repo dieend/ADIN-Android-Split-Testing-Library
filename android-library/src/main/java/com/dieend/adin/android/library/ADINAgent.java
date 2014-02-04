@@ -11,48 +11,70 @@ import android.content.Context;
 public class ADINAgent {
 	private static ADINAgent instance;
 	private Context context;
-	private MetricsDatabaseHelper dbHelper;
-	private Map<String, Long> timedEvent;
+	private IADINSelector selector;
+	private IADINTracker tracker;
+	
 	private ADINAgent(Context ctx) {
 		context = ctx;
-		dbHelper = new MetricsDatabaseHelper(ctx);
-		timedEvent = new HashMap<String, Long>();
+		selector = new ADINSelector(ctx);
+		tracker = new ADINTracker(ctx);
 	}
+	private ADINAgent(Context ctx, IADINSelector slctr) {
+		context = ctx;
+		selector = slctr;
+		tracker = new ADINTracker(ctx);
+	}
+	private ADINAgent(Context ctx, IADINTracker trck) {
+		context = ctx;
+		tracker = trck;
+		selector = new ADINSelector(ctx);
+	}
+	private ADINAgent(Context ctx, IADINSelector slctr, IADINTracker trck) {
+		context = ctx;
+		selector = slctr;
+		tracker = trck;
+	}
+	
 	public static void onCreate(Context ctx) {
 		instance = new ADINAgent(ctx);
 	}
+	public static void onCreate(Context ctx, IADINSelector selector) {
+		instance = new ADINAgent(ctx, selector);
+	}
+	public static void onCreate(Context ctx, IADINTracker tracker) {
+		instance = new ADINAgent(ctx, tracker);
+	}
+	public static void onCreate(Context ctx, IADINSelector selector, IADINTracker tracker) {
+		instance = new ADINAgent(ctx, selector, tracker);
+	}
+	public static boolean isInExperiment(String experimentName) {
+		return ADINAgent.i().selector.isInExperiment(experimentName);
+	}
 	private static ADINAgent i() {
-		assert instance != null;
+		if (instance == null) throw new RuntimeException("ADINAgent haven't been initialized.\n"
+				+ "Please initialize it with ADINAgent.onCreate()");
+		if (!instance.tracker.isReady() && !instance.selector.isReady()) throw 
+			new RuntimeException("Tracker or Instance isn't ready. Please wait until it's ready "
+					+ "before using.");
 		return instance;
 	}
 	public static void logEvent(String key) {
-		i().save(key, new HashMap<String, String>(), false);
+		ADINAgent.i().tracker.save(key, new HashMap<String, String>(), false);
 	}
 	public static void logEvent(String key, Map<String, String> parameters) {
-		i().save(key, parameters, false);
+		ADINAgent.i().tracker.save(key, parameters, false);
 	}
 	public static void logEvent(String key, Map<String, String> parameters, boolean timed) {
-		i().save(key, parameters, timed);
+		if (parameters == null) {
+			parameters = new HashMap<String, String>();
+		}
+		ADINAgent.i().tracker.save(key, parameters, timed);
 	}
 	public static void endTimedEvent(String key) {
-		i().end(key);
+		ADINAgent.i().tracker.end(key);
 	}
-	private void end(String key) {
-		Long id = timedEvent.remove(key);
-		assert id != null;
-		dbHelper.update(id, key, System.currentTimeMillis());
-	}
-	private void save(String key, Map<String, String> params, boolean timed) {
-		JSONObject parameters = new JSONObject(params);
-		if (timed) {
-			Long id = timedEvent.remove(key);
-			if (id!=null) {
-				dbHelper.update(id, key, System.currentTimeMillis());
-			}
-			id = dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
-			timedEvent.put(key, id);
-		} else {
-			dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
-		}
+	
+	public static boolean isReady() {
+		return ADINAgent.instance.selector.isReady() && ADINAgent.instance.tracker.isReady();
 	}
 }

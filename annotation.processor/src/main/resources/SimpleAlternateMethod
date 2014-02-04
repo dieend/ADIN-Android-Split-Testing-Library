@@ -10,8 +10,7 @@ $type.asType().toString()#if($foreach.hasNext), #end
 
 #macro(type_and_var $parameters)
 #foreach($type in $parameters)
-, $type.asType() $type.getSimpleName()
-#end#end
+, $type.asType() $type.getSimpleName()#end#end
 
 public privileged aspect SplittingAspect {
 #foreach($method in $methods)
@@ -19,21 +18,19 @@ public privileged aspect SplittingAspect {
     #set( $return = $returnTypes[$foreach.index] )
     #set( $methodName = $method.getSimpleName().toString() )
     #set( $alternateMethod = $alternateMethods[$foreach.index] )
+    #set( $experimentName = $experimentNames[$foreach.index] )
     $return around($concern instance #type_and_var($method.getParameters()) ) : 
         target(instance) &&  
         call($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
         args(#args($method.getParameters()))
         #end{
-        switch(com.dieend.example.whichlayouttab.Splitter.whichVersioN()) {
-            case 1:
+        if(com.dieend.adin.android.library.ADINAgent.isInExperiment("$experimentName")) {
                 #if($return!="void")return #end
 proceed(instance#if($method.getParameters().size() > 0),#end #args($method.getParameters()));
-                #if($return=="void")break; #end
-            default:
+        } else {
                 #if($return!="void")return #end
 instance.${alternateMethod}(#args($method.getParameters()));
-                #if($return=="void")break; #end
-        }
+}
     }
 #end
 }
