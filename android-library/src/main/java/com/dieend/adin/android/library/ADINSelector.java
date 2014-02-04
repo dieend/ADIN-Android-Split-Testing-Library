@@ -26,5 +26,10 @@ final class ADINSelector implements IADINSelector {
 	@Override
 	public boolean isTreated() {
 		return true;
+	}
+	@Override
+	public Object getParameter(String experimentName, String identifier) {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

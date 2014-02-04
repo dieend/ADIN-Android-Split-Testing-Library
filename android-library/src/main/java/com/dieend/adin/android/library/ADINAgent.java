@@ -76,7 +76,10 @@ public class ADINAgent {
 	public static void endTimedEvent(String key) {
 		ADINAgent.i().tracker.end(key);
 	}
-	
+	public static Object getParameter(String arg1, String arg2) {
+		return ADINAgent.i().selector.getParameter(arg1, arg2);
+	}
+		
 	public static boolean isReady() {
 		return ADINAgent.instance.selector.isReady() && ADINAgent.instance.tracker.isReady();
 	}
