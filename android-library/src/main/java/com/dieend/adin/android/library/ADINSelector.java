@@ -7,14 +7,7 @@ final class ADINSelector implements IADINSelector {
 	ADINSelector(Context ctx){
 		context = ctx;
 	}
-	int value = 0;
-	
-	public void registerVersion(int i){
-		value = i;
-	}
-	public int getVersion() {
-		return value;
-	}
+
 	@Override
 	public boolean isInExperiment(String experimentName) {
 		return false;
@@ -25,11 +18,10 @@ final class ADINSelector implements IADINSelector {
 	}
 	@Override
 	public boolean isTreated() {
-		return true;
+		return false;
 	}
 	@Override
 	public Object getParameter(String experimentName, String identifier) {
-		// TODO Auto-generated method stub
 		return null;
 	}	
 }

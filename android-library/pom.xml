@@ -4,7 +4,7 @@
 	<parent>
         <artifactId>ADIN-parent</artifactId>
         <groupId>com.dieend.adin</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 	<groupId>com.dieend.adin.android</groupId>
 	<artifactId>android-library</artifactId>
