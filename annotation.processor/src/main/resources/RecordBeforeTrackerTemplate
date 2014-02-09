@@ -1,0 +1,49 @@
+package com.dieend.adin.generated.aspect;
+
+import java.util.HashMap;
+import java.util.Map;
+
+#macro(args $parameters)
+#foreach($variable in $parameters)
+$variable.getSimpleName()#if($foreach.hasNext), #end
+#end#end
+#macro(type $parameters)
+#foreach($type in $parameters)
+$type.asType().toString()#if($foreach.hasNext), #end
+#end)#end
+
+#macro(type_and_var $parameters)
+#foreach($type in $parameters)
+, $type.asType() $type.getSimpleName()#end#end
+
+public privileged aspect RecordBeforeTrackerAspect {
+#foreach($method in $methods)
+    #set( $concern = $concerns[$foreach.index].getQualifiedName().toString() )
+    #set( $return = $returnTypes[$foreach.index] )
+    #set( $methodName = $method.getSimpleName().toString() )
+    #set( $experimentName = $experimentNames[$foreach.index] )
+    #set( $timed = $timeds[$foreach.index] )
+    #if($return!="void")
+        after($concern instance #type_and_var($method.getParameters()) ) returning($return retdata) :
+    #else
+        after($concern instance #type_and_var($method.getParameters()) ) returning() :
+    #end
+        target(instance) &&  
+        call($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
+        args(#args($method.getParameters()))
+        #end{
+        
+        #if($timed.name() == "END_TIMED")
+            com.dieend.adin.android.library.ADINAgent.endTimedEvent("$eventName");
+        #else
+            Map<String, Object> params = new HashMap<String, Object>();
+            #if($return!="void") 
+            params.put("retdata",String.valueOf(retdata) );
+            #end
+            params.put("method", String.valueOf(thisJoinPoint));
+            com.dieend.adin.android.library.ADINAgent.logEvent("$eventName", params, #if($timed.name()=="DEFAULT")false#{else}true#end);
+        #end 
+        
+    }
+#end
+}

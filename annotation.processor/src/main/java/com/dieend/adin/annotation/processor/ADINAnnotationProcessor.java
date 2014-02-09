@@ -24,17 +24,24 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-import com.dieend.adin.annotation.ADINParameterSplitTest;
-import com.dieend.adin.annotation.ADINSimpleSplitTest;
+import com.dieend.adin.annotation.ParameterSplitTest;
+import com.dieend.adin.annotation.RecordAfterWith;
+import com.dieend.adin.annotation.RecordBeforeWith;
+import com.dieend.adin.annotation.SimpleSplitTest;
+import com.dieend.adin.annotation.Type;
 
 
 @SupportedAnnotationTypes({
-	"com.dieend.adin.annotation.ADINSimpleSplitTest",
-	"com.dieend.adin.annotation.ADINParameterSplitTest"}
+	"com.dieend.adin.annotation.SimpleSplitTest",
+	"com.dieend.adin.annotation.ParameterSplitTest",
+	"com.dieend.adin.annotation.RecordBeforeWith",
+	"com.dieend.adin.annotation.RecordAfterWith"}
 )
 public class ADINAnnotationProcessor extends AbstractProcessor{
 	private static final String SIMPLE_SPLIT_TEST = "SimpleSplitTest";
 	private static final String PARAMETER_SPLIT_TEST = "ParameterSplitTest";
+	private static final String RECORD_BEFORE_TRACKER = "RecordBeforeTracker";
+	private static final String RECORD_AFTER_TRACKER = "RecordAfterTracker";
 	private static final String ASPECT_PACKAGE = "com.dieend.adin.generated.aspect";
 	
 	
@@ -43,19 +50,30 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
 			RoundEnvironment roundEnv) {
 		processingEnv.getMessager().printMessage(
                 Diagnostic.Kind.NOTE, "Processing with ADINProcessor");
-		System.out.println("AAAAA");
 		try {
-			Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(ADINSimpleSplitTest.class);
+			Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(SimpleSplitTest.class);
 			boolean any = false;
 	        if (elements.size() > 0) {
 	        	any = true;
 	        	generatesSimpleSplitTest(elements);
 	        }
 	        
-	        elements = roundEnv.getElementsAnnotatedWith(ADINParameterSplitTest.class);
+	        elements = roundEnv.getElementsAnnotatedWith(ParameterSplitTest.class);
 	        if (elements.size() > 0) {
 	        	any = true;
 	        	generatesParameterSplitTest(elements);
+	        }
+	        
+	        elements = roundEnv.getElementsAnnotatedWith(RecordBeforeWith.class);
+	        if (elements.size() > 0) {
+	        	any = true;
+	        	generatesBeforeTracker(elements);
+	        }
+	        
+	        elements = roundEnv.getElementsAnnotatedWith(RecordAfterWith.class);
+	        if (elements.size() > 0) {
+	        	any = true;
+	        	generatesAfterTracker(elements);
 	        }
 	        
 	        if (!any) return false;
@@ -67,7 +85,6 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
 	}
 	 
 	private void generatesSimpleSplitTest(Set<? extends Element> elements) throws IOException {
-		
 		Properties props = new Properties();
 		URL url = this.getClass().getClassLoader().getResource("velocity.properties");
 		props.load(url.openStream());
@@ -82,7 +99,7 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         List<String> experimentNames = new ArrayList<String>();
 
         for (Element element : elements) {
-	        ADINSimpleSplitTest annotation = element.getAnnotation(ADINSimpleSplitTest.class);
+	        SimpleSplitTest annotation = element.getAnnotation(SimpleSplitTest.class);
 	        experimentNames.add(annotation.experimentName());
 	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
 	        concernMethods.add((ExecutableElement) element);
@@ -128,7 +145,7 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         List<String[]> parameterIdentifiers = new ArrayList<String[]>();
 
         for (Element element : elements) {
-        	ADINParameterSplitTest annotation = element.getAnnotation(ADINParameterSplitTest.class);
+        	ParameterSplitTest annotation = element.getAnnotation(ParameterSplitTest.class);
 	        experimentNames.add(annotation.experimentName());
 	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
 	        concernMethods.add((ExecutableElement) element);
@@ -159,6 +176,96 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         template.merge(vc, writer);
         writer.close();
 	}
+	
+	private void generatesBeforeTracker(Set<? extends Element> elements) throws IOException{
+		Properties props = new Properties();
+		URL url = this.getClass().getClassLoader().getResource("velocity.properties");
+		props.load(url.openStream());
+		Velocity.init(props);
+        VelocityContext vc = new VelocityContext();
+        Template template = Velocity.getTemplate(RECORD_BEFORE_TRACKER + "Template");
+        List<TypeElement> concernClasses = new ArrayList<TypeElement>();
+        List<ExecutableElement> concernMethods = new ArrayList<ExecutableElement>();
+        List<String> returnTypes = new ArrayList<String>();
+        List<String> experimentNames = new ArrayList<String>();
+        List<Type> types = new ArrayList<Type>();
+
+        for (Element element : elements) {
+        	RecordBeforeWith annotation = element.getAnnotation(RecordBeforeWith.class);
+	        experimentNames.add(annotation.eventName());
+	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
+	        concernMethods.add((ExecutableElement) element);
+	        returnTypes.add(((ExecutableElement) element).getReturnType().toString());
+	        types.add(annotation.type());
+	    }
+
+
+        vc.put("concerns", concernClasses);
+        vc.put("methods", concernMethods );
+        vc.put("returnTypes", returnTypes);
+        vc.put("experimentNames", experimentNames);
+        vc.put("timeds", types);
+        FileObject jfo = processingEnv.getFiler().createResource(
+        		StandardLocation.SOURCE_OUTPUT, 
+        		ASPECT_PACKAGE, 
+        		RECORD_BEFORE_TRACKER  + "Aspect.java" , 
+        		concernClasses.toArray(new Element[0])
+        );
+        Writer writer = jfo.openWriter();
+        processingEnv.getMessager().printMessage(
+                Diagnostic.Kind.NOTE,
+                "creating source file: " + jfo.toUri());
+        processingEnv.getMessager().printMessage(
+            Diagnostic.Kind.NOTE,
+            "applying velocity template: " + template.getName());
+        template.merge(vc, writer);
+        writer.close();
+	}
+	private void generatesAfterTracker(Set<? extends Element> elements) throws IOException{
+		Properties props = new Properties();
+		URL url = this.getClass().getClassLoader().getResource("velocity.properties");
+		props.load(url.openStream());
+		Velocity.init(props);
+        VelocityContext vc = new VelocityContext();
+        Template template = Velocity.getTemplate(RECORD_AFTER_TRACKER + "Template");
+        List<TypeElement> concernClasses = new ArrayList<TypeElement>();
+        List<ExecutableElement> concernMethods = new ArrayList<ExecutableElement>();
+        List<String> returnTypes = new ArrayList<String>();
+        List<String> experimentNames = new ArrayList<String>();
+        List<Type> types = new ArrayList<Type>();
+
+        for (Element element : elements) {
+        	RecordAfterWith annotation = element.getAnnotation(RecordAfterWith.class);
+	        experimentNames.add(annotation.eventName());
+	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
+	        concernMethods.add((ExecutableElement) element);
+	        returnTypes.add(((ExecutableElement) element).getReturnType().toString());
+	        types.add(annotation.type());
+	    }
+
+
+        vc.put("concerns", concernClasses);
+        vc.put("methods", concernMethods );
+        vc.put("returnTypes", returnTypes);
+        vc.put("experimentNames", experimentNames);
+        vc.put("timeds", types);
+        FileObject jfo = processingEnv.getFiler().createResource(
+        		StandardLocation.SOURCE_OUTPUT, 
+        		ASPECT_PACKAGE, 
+        		RECORD_AFTER_TRACKER  + "Aspect.java" , 
+        		concernClasses.toArray(new Element[0])
+        );
+        Writer writer = jfo.openWriter();
+        processingEnv.getMessager().printMessage(
+                Diagnostic.Kind.NOTE,
+                "creating source file: " + jfo.toUri());
+        processingEnv.getMessager().printMessage(
+            Diagnostic.Kind.NOTE,
+            "applying velocity template: " + template.getName());
+        template.merge(vc, writer);
+        writer.close();
+	}
+	
 	private static <T> TypeMirror getTypeMirror(T annotation, String value) {
 	    try
 	    {

@@ -44,6 +44,40 @@
                 </execution>
             </executions>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>aspectj-maven-plugin</artifactId>
+          <version>1.5</version>
+          <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>1.7.3</version>
+          </dependency>
+        </dependencies>
+          <configuration>
+            <complianceLevel>1.6</complianceLevel>
+            <sources>
+	            <source>
+	                <basedir>target/generated_aspect</basedir>
+	                <includes>
+	                    **/*.aj
+	                </includes>
+	            </source>
+	        </sources>
+            <target>${maven.compiler.target}</target>
+            <outxml>true</outxml>
+            <verbose>true</verbose>
+            <showWeaveInfo>true</showWeaveInfo>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>test-compile</goal> <!-- use this goal to weave all your test classes -->
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
   </build>
   <dependencies>
@@ -76,8 +110,14 @@
      <dependency>
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjtools</artifactId>
-        <version>1.6.2</version>
+        <version>1.7.3</version>
         <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.7.3</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
 	    <groupId>tv.cntt</groupId>
@@ -88,6 +128,6 @@
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>3.18.1-GA</version>
-    </dependency>	
+    </dependency>
   </dependencies>
 </project>
