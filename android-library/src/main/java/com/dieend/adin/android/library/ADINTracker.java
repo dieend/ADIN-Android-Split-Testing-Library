@@ -14,20 +14,6 @@ final class ADINTracker implements IADINTracker {
 		dbHelper = new MetricsDatabaseHelper(ctx);
 	}
 	@Override
-	public void save(String key, Map<String, String> params, boolean timed) {
-		JSONObject parameters = new JSONObject(params);
-		if (timed) {
-			Long id = timedEvent.remove(key);
-			if (id!=null) {
-				dbHelper.update(id, key, System.currentTimeMillis());
-			}
-			id = dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
-			timedEvent.put(key, id);
-		} else {
-			dbHelper.add(key, parameters, System.currentTimeMillis(), -1);
-		}
-	}
-	@Override
 	public void end(String key) {
 		Long id = timedEvent.remove(key);
 		assert id != null;
@@ -36,5 +22,19 @@ final class ADINTracker implements IADINTracker {
 	@Override
 	public boolean isReady() {
 		return true;
+	}
+	@Override
+	public void save(String eventName, Map<String, Object> params, boolean timed) {
+		JSONObject parameters = new JSONObject(params);
+		if (timed) {
+			Long id = timedEvent.remove(eventName);
+			if (id!=null) {
+				dbHelper.update(id, eventName, System.currentTimeMillis());
+			}
+			id = dbHelper.add(eventName, parameters, System.currentTimeMillis(), -1);
+			timedEvent.put(eventName, id);
+		} else {
+			dbHelper.add(eventName, parameters, System.currentTimeMillis(), -1);
+		}
 	}
 }

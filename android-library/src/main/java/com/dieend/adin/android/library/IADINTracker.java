@@ -11,7 +11,7 @@ public interface IADINTracker {
 	 * @param timed
 	 * @see <a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted/Events/Android">Flurry Event</a>
 	 */
-	public void save(String eventName, Map<String, String> params, boolean timed);
+	public void save(String eventName, Map<String, Object> params, boolean timed);
 	/**
 	 * End timed event
 	 * 

@@ -153,7 +153,7 @@ public class ADINAgent {
 	 * @see <a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted/Events/Android">Flurry Event</a>
 	 */
 	public static void logEvent(String eventName) {
-		ADINAgent.i().tracker.save(eventName, new HashMap<String, String>(), false);
+		ADINAgent.i().tracker.save(eventName, new HashMap<String, Object>(), false);
 	}
 	/**
 	 * Log event with provided eventName and parameters
@@ -167,7 +167,7 @@ public class ADINAgent {
 	 * @see #onCreate(Context, IADINSelector, IADINTracker)
 	 * @see <a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted/Events/Android">Flurry Event</a>
 	 */
-	public static void logEvent(String eventName, Map<String, String> parameters) {
+	public static void logEvent(String eventName, Map<String, Object> parameters) {
 		ADINAgent.i().tracker.save(eventName, parameters, false);
 	}
 	/**
@@ -184,9 +184,9 @@ public class ADINAgent {
 	 * @see #onCreate(Context, IADINSelector, IADINTracker)
 	 * @see <a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted/Events/Android">Flurry Event</a>
 	 */
-	public static void logEvent(String eventName, Map<String, String> parameters, boolean timed) {
+	public static void logEvent(String eventName, Map<String, Object> parameters, boolean timed) {
 		if (parameters == null) {
-			parameters = new HashMap<String, String>();
+			parameters = new HashMap<String, Object>();
 		}
 		ADINAgent.i().tracker.save(eventName, parameters, timed);
 	}
