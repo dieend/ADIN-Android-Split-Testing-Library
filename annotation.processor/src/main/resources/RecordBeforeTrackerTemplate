@@ -21,15 +21,15 @@ public privileged aspect RecordBeforeTrackerAspect {
     #set( $concern = $concerns[$foreach.index].getQualifiedName().toString() )
     #set( $return = $returnTypes[$foreach.index] )
     #set( $methodName = $method.getSimpleName().toString() )
-    #set( $experimentName = $experimentNames[$foreach.index] )
     #set( $timed = $timeds[$foreach.index] )
+    #set( $eventName = $eventNames[$foreach.index] )
     #if($return!="void")
         after($concern instance #type_and_var($method.getParameters()) ) returning($return retdata) :
     #else
         after($concern instance #type_and_var($method.getParameters()) ) returning() :
     #end
         target(instance) &&  
-        call($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
+        execution($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
         args(#args($method.getParameters()))
         #end{
         

@@ -187,12 +187,12 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         List<TypeElement> concernClasses = new ArrayList<TypeElement>();
         List<ExecutableElement> concernMethods = new ArrayList<ExecutableElement>();
         List<String> returnTypes = new ArrayList<String>();
-        List<String> experimentNames = new ArrayList<String>();
+        List<String> eventNames = new ArrayList<String>();
         List<Type> types = new ArrayList<Type>();
 
         for (Element element : elements) {
         	RecordBeforeWith annotation = element.getAnnotation(RecordBeforeWith.class);
-	        experimentNames.add(annotation.eventName());
+	        eventNames.add(annotation.eventName());
 	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
 	        concernMethods.add((ExecutableElement) element);
 	        returnTypes.add(((ExecutableElement) element).getReturnType().toString());
@@ -203,7 +203,7 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         vc.put("concerns", concernClasses);
         vc.put("methods", concernMethods );
         vc.put("returnTypes", returnTypes);
-        vc.put("experimentNames", experimentNames);
+        vc.put("eventNames", eventNames);
         vc.put("timeds", types);
         FileObject jfo = processingEnv.getFiler().createResource(
         		StandardLocation.SOURCE_OUTPUT, 
@@ -231,12 +231,12 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         List<TypeElement> concernClasses = new ArrayList<TypeElement>();
         List<ExecutableElement> concernMethods = new ArrayList<ExecutableElement>();
         List<String> returnTypes = new ArrayList<String>();
-        List<String> experimentNames = new ArrayList<String>();
+        List<String> eventNames = new ArrayList<String>();
         List<Type> types = new ArrayList<Type>();
 
         for (Element element : elements) {
         	RecordAfterWith annotation = element.getAnnotation(RecordAfterWith.class);
-	        experimentNames.add(annotation.eventName());
+	        eventNames.add(annotation.eventName());
 	        concernClasses.add(((TypeElement)((ExecutableElement)element).getEnclosingElement()));
 	        concernMethods.add((ExecutableElement) element);
 	        returnTypes.add(((ExecutableElement) element).getReturnType().toString());
@@ -247,7 +247,7 @@ public class ADINAnnotationProcessor extends AbstractProcessor{
         vc.put("concerns", concernClasses);
         vc.put("methods", concernMethods );
         vc.put("returnTypes", returnTypes);
-        vc.put("experimentNames", experimentNames);
+        vc.put("eventNames", eventNames);
         vc.put("timeds", types);
         FileObject jfo = processingEnv.getFiler().createResource(
         		StandardLocation.SOURCE_OUTPUT, 
