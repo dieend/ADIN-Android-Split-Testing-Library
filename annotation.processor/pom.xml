@@ -9,6 +9,7 @@
   <name>ADIN Annotation Processor</name>
   <build>
     <finalName>${project.name}-${project.version}</finalName>
+    <pluginManagement>
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -79,6 +80,7 @@
           </executions>
         </plugin>
       </plugins>
+      </pluginManagement>
   </build>
   <dependencies>
       <dependency>
@@ -120,4 +122,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
 </project>

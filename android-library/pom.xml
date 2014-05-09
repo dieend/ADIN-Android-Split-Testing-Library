@@ -40,6 +40,7 @@
 	</dependencies>
 
 	<build>
+	    <pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
@@ -53,5 +54,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		</pluginManagement>
 	</build>
 </project>

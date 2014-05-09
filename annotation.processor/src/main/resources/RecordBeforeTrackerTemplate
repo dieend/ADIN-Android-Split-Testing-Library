@@ -37,8 +37,8 @@ public privileged aspect RecordBeforeTrackerAspect {
             com.dieend.adin.android.library.ADINAgent.endTimedEvent("$eventName");
         #else
             Map<String, Object> params = new HashMap<String, Object>();
-            #if($return!="void") 
-            params.put("retdata",String.valueOf(retdata) );
+            #foreach ($type in $method.getParameters()) 
+            params.put("$type.getSimpleName()",String.valueOf($type.getSimpleName()) );
             #end
             params.put("method", String.valueOf(thisJoinPoint));
             com.dieend.adin.android.library.ADINAgent.logEvent("$eventName", params, #if($timed.name()=="DEFAULT")false#{else}true#end);
