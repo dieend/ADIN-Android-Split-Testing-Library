@@ -1,0 +1,73 @@
+{
+  "com.dieend.adin.hermes.annotations.SimpleSplitTest" : [ {
+    "experimentName" : "a",
+    "package" : "com.example.demo",
+    "class" : "MainActivity",
+    "methodPair" : {
+      "mainMethod" : {
+        "name" : "coba",
+        "returnType" : "void",
+        "params" : [ {
+          "type" : "int",
+          "name" : "a",
+          "modifiable" : true,
+          "value" : null
+        }, {
+          "type" : "java.lang.String",
+          "name" : "b",
+          "modifiable" : false
+        } ]
+      },
+      "alternateMethods" : [ {
+        "name" : "alternatecoba1",
+        "params" : [ {
+          "name" : "a",
+          "value" : null
+        } ]
+      }, {
+        "name" : "alternatecoba2",
+        "params" : [ {
+          "name" : "a",
+          "value" : null
+        } ]
+      } ]
+    }
+  } ],
+  "com.dieend.adin.hermes.annotations.ParameterSplitTest" : [ {
+    "experimentName" : "b",
+    "package" : "com.example.demo",
+    "class" : "MainActivity",
+    "method" : {
+      "name" : "coba2",
+      "returnType" : "int",
+      "params" : [ {
+        "type" : "int",
+        "name" : "a",
+        "modifiable" : true,
+        "value" : null
+      }, {
+        "type" : "java.lang.String",
+        "name" : "b",
+        "modifiable" : true,
+        "value" : null
+      } ],
+      "parameterVarian" : [ {
+        "params" : [ {
+          "name" : "a",
+          "value" : null
+        }, {
+          "name" : "b",
+          "value" : null
+        } ]
+      }, {
+        "params" : [ {
+          "name" : "a",
+          "value" : null
+        }, {
+          "name" : "b",
+          "value" : null
+        } ]
+      } ]
+    }
+  } ]
+}

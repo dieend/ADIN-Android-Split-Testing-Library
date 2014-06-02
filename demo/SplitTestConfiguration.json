@@ -1,0 +1,44 @@
+{
+  "com.dieend.adin.hermes.annotations.SimpleSplitTest" : [ {
+    "experimentName" : "testExperiment",
+    "package" : "com.dieend.example.whichlayouttab",
+    "class" : "MainActivity",
+    "methodPair" : {
+      "mainMethod" : {
+        "name" : "layoutA",
+        "returnType" : "void",
+        "params" : [ {
+          "type" : "java.lang.String",
+          "name" : "color",
+          "modifiable" : true,
+          "value" : null
+        } ]
+      },
+      "alternateMethods" : [ {
+        "name" : "layoutB",
+        "bucket" : 1,
+        "params" : [ {
+          "name" : "color",
+          "value" : null
+        } ]
+      } ]
+    }
+  } ],
+  "com.dieend.adin.hermes.annotations.ParameterSplitTest" : [ {
+    "experimentName" : "testExperiment",
+    "package" : "com.dieend.example.whichlayouttab",
+    "class" : "MainActivity",
+    "method" : {
+      "name" : "getBgColor",
+      "returnType" : "int",
+      "params" : [ {
+        "type" : "java.lang.String",
+        "name" : "color",
+        "modifiable" : false
+      } ],
+      "parameterVarian" : [ {
+        "params" : [ ]
+      } ]
+    }
+  } ]
+}

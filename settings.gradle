@@ -1,0 +1,1 @@
+include "appcompat","hermes", "hermes-api", "aphrodite-annotation", "aphrodite-generator", "aphrodite-plugin", "demo"

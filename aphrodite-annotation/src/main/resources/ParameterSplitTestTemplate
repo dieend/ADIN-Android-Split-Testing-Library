@@ -1,0 +1,47 @@
+package com.dieend.adin.generated.aspect;
+#macro(args $parameters)
+#foreach($variable in $parameters)
+$variable.getSimpleName()#if($foreach.hasNext), #end
+#end#end
+#macro(type $parameters)
+#foreach($type in $parameters)
+$type.asType().toString()#if($foreach.hasNext), #end
+#end)#end
+
+#macro(type_and_var $parameters)
+#foreach($type in $parameters)
+, $type.asType() $type.getSimpleName()#end#end
+
+public privileged aspect ParameterSplitTestAspect {
+#foreach($method in $methods)
+    #set( $concern = $concerns[$foreach.index].getQualifiedName().toString() )
+    #set( $return = $returnTypes[$foreach.index] )
+    #set( $methodName = $method.getSimpleName().toString() )
+    #set( $experimentName = $experimentNames[$foreach.index] )
+    #set( $parameterIdentifier = $parameterIdentifiers[$foreach.index] )
+    
+    $return around($concern instance #type_and_var($method.getParameters()) ) : 
+        target(instance) &&  
+        call($return ${concern}.${methodName}(#type($method.getParameters() )) #if($method.getParameters().size() > 0)&&
+        args(#args($method.getParameters()))
+        #end{
+        
+        if(com.dieend.adin.hermes.ADIN.isInExperiment("$experimentName") && com.dieend.adin.hermes.ADIN.isTreated()) {
+                #if($return!="void")return #end
+proceed(instance#if($method.getParameters().size() > 0),#end #args($method.getParameters()));
+        } else {
+            #foreach($variable in $method.getParameters())
+                #set ($type = $variable.asType().toString())
+                #if ($parameterIdentifier.size() > 0)
+                    #set( $identifier = $parameterIdentifier[$foreach.index] )
+                #else
+                    #set( $identifier = $variable.getSimpleName() )
+                #end
+                $variable.getSimpleName() = ($type) com.dieend.adin.hermes.ADIN.getParameter("$experimentName", "$identifier"); 
+            #end
+            #if($return!="void")return #end
+proceed(instance#if($method.getParameters().size() > 0),#end #args($method.getParameters()));
+        }
+    }
+#end
+}

@@ -1,0 +1,32 @@
+{{#pointcut}}
+{{#method}}
+	{{returnType}} around( {{pkg}}.{{clazz}} instance 
+		{{#parameters}}, {{type}} {{name}} {{/parameters}} ):
+		target(instance) &&
+		call({{returnType}} {{pkg}}.{{clazz}}.{{name}}({{#parameters}}{{^isFirstParam}},{{/isFirstParam}}
+			{{type}}{{/parameters}}
+		)) {{#isHaveParam}} &&
+		args({{#parameters}}{{^isFirstParam}},{{/isFirstParam}}
+			{{name}}{{/parameters}}
+		)
+		{{/isHaveParam}}
+		{
+
+		if({{ADIN}}.isInExperiment("{{experimentName}}")) {
+			switch ({{ADIN}}.bucket("{{experimentName}}")) {
+				{{#alternateMethods}}
+				case {{bucket}}: {{#isNotVoid}}return{{/isNotVoid}} 
+							instance.{{name}}({{#parameters}}{{^isFirstParam}},{{/isFirstParam}}
+								{{#modifiable}}({{type}}){{ADIN}}.getParameter("{{experimentName}}", "{{name}}"){{/modifiable}}{{^modifiable}}{{name}}{{/modifiable}}{{/parameters}}
+							);
+							{{^isNotVoid}}break;{{/isNotVoid}}
+				{{/alternateMethods}} 
+				default: {{#isNotVoid}}return{{/isNotVoid}} proceed(instance{{#parameters}},{{#modifiable}}({{type}}){{ADIN}}.getParameter("{{experimentName}}", "{{name}}"){{/modifiable}}{{^modifiable}}{{name}}{{/modifiable}}{{/parameters}});
+					{{^isNotVoid}}break;{{/isNotVoid}}
+			}
+		} else {
+			{{#isNotVoid}}return{{/isNotVoid}} proceed(instance{{#parameters}},{{name}}{{/parameters}});
+		}
+	}
+{{/method}}
+{{/pointcut}}
