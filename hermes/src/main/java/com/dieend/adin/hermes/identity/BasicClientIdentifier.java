@@ -55,6 +55,9 @@ public class BasicClientIdentifier {
 
 		return uuid.toString();
 	}
+	public String getUUID() {
+		return uuid;
+	}
 	protected String device = Build.DEVICE;
 	protected String manufacturer = Build.MANUFACTURER;
 	protected String brand = Build.BRAND;

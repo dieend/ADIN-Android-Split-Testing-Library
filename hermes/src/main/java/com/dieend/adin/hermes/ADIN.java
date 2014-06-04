@@ -30,6 +30,10 @@ public class ADIN {
 		selector = new DefaultSplitter(ctx, url, defaultSplitWaiter);
 		tracker = new DefaultTracker(ctx);
 	}
+	private ADIN(Context ctx, String url, SplitWaiter s) {
+		selector = new DefaultSplitter(ctx, url, s);
+		tracker = new DefaultTracker(ctx);
+	}
 	private ADIN(Context ctx, SplitterInterface slctr) {
 		selector = slctr;
 		tracker = new DefaultTracker(ctx);
@@ -66,6 +70,9 @@ public class ADIN {
 	public static void onCreate(Context ctx, SplitterInterface selector) {
 		instance = new ADIN(ctx, selector);
 	}
+	public static void onCreate(Context ctx, String url, SplitWaiter s) {
+		instance = new ADIN(ctx, url, s);
+	}
 	/**
 	 * Initializes Agent with context and custom tracker.
 	 * 
@@ -95,7 +102,7 @@ public class ADIN {
 		instance = new ADIN(ctx, selector, tracker);
 	}
 	
-	private static ADIN $() {
+	public static ADIN $() {
 		if (instance == null) throw new RuntimeException("ADINAgent haven't been initialized.\n"
 				+ "Please initialize it with ADINAgent.onCreate()");
 		if (!instance.tracker.isReady() && !instance.selector.isReady()) throw 

@@ -22,7 +22,11 @@ public interface SplitterInterface {
 	 * @return
 	 */
 	public boolean isTreated();
-	
+
+	/**
+	 * return the treatment bucket
+	 * @return bucket number
+	 */
 	public int bucket(String experimentName);
 	
 	/**

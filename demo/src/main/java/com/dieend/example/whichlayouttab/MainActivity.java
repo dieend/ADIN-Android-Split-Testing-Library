@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +25,7 @@ import com.dieend.adin.hermes.annotations.ParameterSplitTest;
 import com.dieend.adin.hermes.annotations.RecordAfterWith;
 import com.dieend.adin.hermes.annotations.RecordBeforeWith;
 import com.dieend.adin.hermes.annotations.SimpleSplitTest;
-import com.dieend.adin.hermes.annotations.Type;
+import com.dieend.adin.hermes.splitter.SplitWaiter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener, SplitWaiter {
@@ -80,12 +81,11 @@ public class MainActivity extends FragmentActivity implements
 		params.height = ViewPager.LayoutParams.WRAP_CONTENT;
 		params.gravity = Gravity.TOP;
 		strip.setTextColor(Color.parseColor(color));
-		strip.setBackgroundColor(getBgColor("#33b5e5"));
+		strip.setBackgroundColor(getBgColor("#FFFFFF"));
 		float scale = getResources().getDisplayMetrics().density;
 		int dpAsPixels = (int) (4*scale + 0.5f);
 		strip.setPadding(0, dpAsPixels, 0, dpAsPixels);
 		mViewPager.addView(strip, 0, params);
-		
 		mViewPager
 		.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
@@ -96,14 +96,13 @@ public class MainActivity extends FragmentActivity implements
 		});
 	}
 	
-	@ParameterSplitTest(experimentName="testExperiment")
 	private int getBgColor(String color) {
 		return Color.parseColor(color);
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ADIN.onCreate(this, new Splitter(this, "http://google.com", this));
+		ADIN.onCreate(this, "http://192.168.1.100:9000/client/demo", (SplitWaiter)this);
 		setLoader();
 		
 	}

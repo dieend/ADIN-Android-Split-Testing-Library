@@ -21,6 +21,7 @@ public class Clazz extends BaseContext {
 			ObjectNode var = (ObjectNode) alternate.get(i);
 			Method m = org.apache.commons.lang3.SerializationUtils.clone(method);
 			m.name = var.get("name").asText();
+			m.bucket = var.get("bucket").asInt();
 			ArrayNode p = (ArrayNode) var.get("params");
 			for (int j=0; j< p.size(); j++) {
 				
